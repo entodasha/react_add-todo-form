@@ -7,25 +7,34 @@ import { getUserById } from './servises/GetUser';
 import { Todo } from './types/Todo';
 import users from './api/users';
 
-export const todos = todosFromServer.map(todo => ({
-  ...todo,
-  user: getUserById(todo.userId),
-}));
-
 export const App = () => {
+  const todos = todosFromServer.map(todo => ({
+    ...todo,
+    user: getUserById(todo.userId),
+  }));
+
   const [initialTodos, setInitialTodos] = useState<Todo[]>(todos);
 
-  const addTodo = (newTodo: Todo) => {
+  const addTodo = (formData: { title: string; userId: number }) => {
+    const newId = Math.max(...initialTodos.map(todo => todo.id)) + 1;
+    const user = getUserById(formData.userId);
+
+    const newTodo: Todo = {
+      id: newId,
+      title: formData.title,
+      userId: formData.userId,
+      completed: false,
+      user: user,
+    };
+
     setInitialTodos(currentTodos => [...currentTodos, newTodo]);
   };
-
-  const newId = Math.max(...todos.map(todo => todo.id)) + 1;
 
   return (
     <div className="section">
       <h1>Add todo form</h1>
 
-      <TodoForm onSubmit={addTodo} id={newId} users={users} />
+      <TodoForm onSubmit={addTodo} users={users} />
       <TodoList todos={initialTodos} />
     </div>
   );

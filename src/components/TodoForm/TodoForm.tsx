@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { getUserById } from '../../servises/GetUser';
-import { Todo } from '../../types/Todo';
 import { User } from '../../types/User';
 
 type Props = {
-  onSubmit: (todo: Todo) => void;
-  id: number;
+  onSubmit: (formData: { title: string; userId: number }) => void;
   users: User[];
 };
 
-export const TodoForm: React.FC<Props> = ({ onSubmit, id, users }) => {
+export const TodoForm: React.FC<Props> = ({ onSubmit, users }) => {
   const [title, setTitle] = useState('');
   const [hasTitleError, setHasTitleError] = useState(false);
 
@@ -41,11 +38,8 @@ export const TodoForm: React.FC<Props> = ({ onSubmit, id, users }) => {
     }
 
     onSubmit({
-      id: id,
       title: title,
       userId: userId,
-      completed: false,
-      user: getUserById(userId),
     });
 
     handleReser();
